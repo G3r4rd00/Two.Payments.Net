@@ -110,7 +110,12 @@ namespace Two.Payments.Infrastructure
 
             if (response.IsSuccessStatusCode)
             {
-                if (allowEmpty || string.IsNullOrWhiteSpace(body))
+                if (allowEmpty)
+                {
+                    return default;
+                }
+
+                if (string.IsNullOrWhiteSpace(body))
                 {
                     return default;
                 }

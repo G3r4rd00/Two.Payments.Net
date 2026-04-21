@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -45,16 +44,8 @@ namespace Two.Payments.Extensions
 
             services.TryAddSingleton(options);
 
-            // Register a named HttpClient so the lifetime is managed by IHttpClientFactory.
-            services.AddHttpClient<TwoHttpClient>((sp, client) =>
-            {
-                var opts = sp.GetRequiredService<TwoOptions>();
-                client.BaseAddress = new Uri(opts.GetEffectiveBaseUrl() + "/");
-                client.Timeout = opts.Timeout;
-                client.DefaultRequestHeaders.Accept.Add(
-                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("X-API-Key", opts.ApiKey);
-            });
+            // Register a typed HttpClient; configuration is applied inside TwoHttpClient's constructor.
+            services.AddHttpClient<TwoHttpClient>();
 
             services.TryAddTransient<ITwoOrderService>(sp =>
             {
