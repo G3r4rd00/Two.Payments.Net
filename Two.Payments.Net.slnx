@@ -3,6 +3,7 @@
     <Project Path="src/Two.Payments/Two.Payments.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="SandboxTester/SandboxTester.csproj" />
     <Project Path="tests/Two.Payments.Tests/Two.Payments.Tests.csproj" />
   </Folder>
 </Solution>

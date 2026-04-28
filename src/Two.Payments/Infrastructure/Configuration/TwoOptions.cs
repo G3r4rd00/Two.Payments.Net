@@ -52,7 +52,7 @@ namespace Two.Payments.Infrastructure.Configuration
             }
 
             return UseSandbox
-                ? "https://sandbox.api.two.inc/v1"
+                ? "https://api.sandbox.two.inc/v1"
                 : "https://api.two.inc/v1";
         }
 
