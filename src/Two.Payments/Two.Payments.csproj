@@ -9,7 +9,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>Two.Payments</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Gerardo Tous Vallespir</Authors>
     <Company>Gerardo Tous Vallespir</Company>
     <Description>Lightweight and extensible .NET client for the Two B2B payment platform. Compatible with .NET Standard 2.0, .NET 6+, and .NET Framework 4.7+.</Description>
@@ -29,7 +29,7 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\nupkgs</PackageOutputPath>
   </PropertyGroup>
 
-  <!-- Generar paquete automáticamente solo en Release -->
+  <!-- Generar paquete automï¿½ticamente solo en Release -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
