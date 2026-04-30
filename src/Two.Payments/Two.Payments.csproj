@@ -9,7 +9,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>Two.Payments</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Gerardo Tous Vallespir</Authors>
     <Company>Gerardo Tous Vallespir</Company>
     <Description>Lightweight and extensible .NET client for the Two B2B payment platform. Compatible with .NET Standard 2.0, .NET 6+, and .NET Framework 4.7+.</Description>
