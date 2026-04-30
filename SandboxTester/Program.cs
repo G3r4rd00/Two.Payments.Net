@@ -26,6 +26,19 @@ namespace SandboxTester
                 Console.WriteLine("✓ Cliente creado con sandbox API key");
                 Console.WriteLine("  Endpoint: https://api.sandbox.two.inc/v1\n");
 
+                // Consultar límites de crédito del comprador
+                Console.WriteLine("Consultando límites de crédito del comprador...");
+                var limits = await client.Limits.GetBuyerCreditLimitsAsync("FR", "FR07411985641");
+                if (limits != null)
+                {
+                    Console.WriteLine("✓ Límites recuperados");
+                    Console.WriteLine($"  Country: {limits.BuyerCountryCode ?? "(n/a)"}");
+                    Console.WriteLine($"  Organization: {limits.BuyerOrganizationNumber ?? "(n/a)"}");
+                    Console.WriteLine($"  Currency: {limits.Currency ?? "(n/a)"}");
+                    Console.WriteLine($"  CreditLimit: {limits.CreditLimit?.ToString() ?? "(n/a)"}");
+                    Console.WriteLine($"  AvailableCredit: {limits.AvailableCredit?.ToString() ?? "(n/a)"}\n");
+                }
+
                 // Crear una orden de prueba
                 Console.WriteLine("Creando orden de prueba...");
                 var e = new CreateOrderRequest

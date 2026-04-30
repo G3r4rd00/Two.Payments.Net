@@ -12,5 +12,8 @@ namespace Two.Payments.Core.Interfaces
     {
         /// <summary>Provides access to order-related operations.</summary>
         ITwoOrderService Orders { get; }
+
+        /// <summary>Provides access to limits-related operations.</summary>
+        ITwoLimitsService Limits { get; }
     }
 }

@@ -24,13 +24,18 @@ namespace Two.Payments.Application
         /// <inheritdoc/>
         public ITwoOrderService Orders { get; }
 
+        /// <inheritdoc/>
+        public ITwoLimitsService Limits { get; }
+
         /// <summary>
         /// Initializes a new instance of <see cref="TwoClient"/>.
         /// </summary>
         /// <param name="orderService">Order service implementation.</param>
-        public TwoClient(ITwoOrderService orderService)
+        /// <param name="limitsService">Limits service implementation.</param>
+        public TwoClient(ITwoOrderService orderService, ITwoLimitsService limitsService)
         {
             Orders = orderService ?? throw new ArgumentNullException(nameof(orderService));
+            Limits = limitsService ?? throw new ArgumentNullException(nameof(limitsService));
         }
     }
 }

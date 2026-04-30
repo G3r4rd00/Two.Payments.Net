@@ -44,7 +44,11 @@ namespace Two.Payments.Application
                 twoHttp,
                 logger?.CreateLogger<TwoOrderService>());
 
-            return new TwoClient(orderService);
+            var limitsService = TwoLimitsServiceFactory.Create(
+                twoHttp,
+                logger?.CreateLogger<TwoLimitsService>());
+
+            return new TwoClient(orderService, limitsService);
         }
 
         /// <summary>
@@ -69,7 +73,11 @@ namespace Two.Payments.Application
                 twoHttp,
                 logger?.CreateLogger<TwoOrderService>());
 
-            return new TwoClient(orderService);
+            var limitsService = TwoLimitsServiceFactory.Create(
+                twoHttp,
+                logger?.CreateLogger<TwoLimitsService>());
+
+            return new TwoClient(orderService, limitsService);
         }
     }
 }

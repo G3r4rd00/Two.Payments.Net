@@ -54,10 +54,18 @@ namespace Two.Payments.Extensions
                 return TwoOrderServiceFactory.Create(transport, logger);
             });
 
+            services.TryAddTransient<ITwoLimitsService>(sp =>
+            {
+                var transport = sp.GetRequiredService<TwoHttpClient>();
+                var logger = sp.GetService<ILogger<TwoLimitsService>>();
+                return TwoLimitsServiceFactory.Create(transport, logger);
+            });
+
             services.TryAddTransient<ITwoClient>(sp =>
             {
                 var orderService = sp.GetRequiredService<ITwoOrderService>();
-                return new TwoClient(orderService);
+                var limitsService = sp.GetRequiredService<ITwoLimitsService>();
+                return new TwoClient(orderService, limitsService);
             });
 
             return services;
