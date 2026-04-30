@@ -28,7 +28,7 @@ namespace SandboxTester
 
                 // Consultar límites de crédito del comprador
                 Console.WriteLine("Consultando límites de crédito del comprador...");
-                var limits = await client.Limits.GetBuyerCreditLimitsAsync("FR", "FR07411985641");
+                var limits = await client.Limits.GetBuyerCreditLimitsAsync("BE", "BE0429448494");
                 if (limits != null)
                 {
                     Console.WriteLine("✓ Límites recuperados");
