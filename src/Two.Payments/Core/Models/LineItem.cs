@@ -89,13 +89,10 @@ namespace Two.Payments.Core.Models
             [JsonProperty("tax_class_name")] string taxClassName,
             [JsonProperty("type")] string type)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentNullException(nameof(description));
+            
+            
             if (quantity <= 0) throw new ArgumentException("Quantity debe ser mayor que 0", nameof(quantity));
-            if (string.IsNullOrWhiteSpace(unitPrice)) throw new ArgumentNullException(nameof(unitPrice));
-            if (string.IsNullOrWhiteSpace(taxRate)) throw new ArgumentNullException(nameof(taxRate));
-            if (string.IsNullOrWhiteSpace(taxClassName)) throw new ArgumentNullException(nameof(taxClassName));
-            if (string.IsNullOrWhiteSpace(type)) throw new ArgumentNullException(nameof(type));
+            
 
             Name = name;
             Description = description;
