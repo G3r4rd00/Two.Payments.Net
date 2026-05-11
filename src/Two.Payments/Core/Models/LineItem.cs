@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using Two.Payments.Infrastructure.Serialization;
 
 namespace Two.Payments.Core.Models
@@ -59,7 +60,7 @@ namespace Two.Payments.Core.Models
         public string TaxRate { get; set; }
 
         /// <summary>Tax class applied to the line item (e.g. "HIGH", "LOW", "NONE").</summary>
-        [JsonProperty("tax_class_name")]
+        [JsonProperty("tax_class_name", Required = Required.Always)]
         public string TaxClassName { get; set; }
 
         /// <summary>Discount amount for this line item as a string.</summary>
@@ -74,5 +75,35 @@ namespace Two.Payments.Core.Models
         /// <summary>Merchant's own identifier for the product.</summary>
         [JsonProperty("product_id")]
         public string ProductId { get; set; }
+
+        // Parameterless constructor for test and deserialization compatibility
+        public LineItem() { }
+
+        [JsonConstructor]
+        public LineItem(
+            [JsonProperty("name")] string name,
+            [JsonProperty("description")] string description,
+            [JsonProperty("quantity")] int quantity,
+            [JsonProperty("unit_price")] string unitPrice,
+            [JsonProperty("tax_rate")] string taxRate,
+            [JsonProperty("tax_class_name")] string taxClassName,
+            [JsonProperty("type")] string type)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentNullException(nameof(description));
+            if (quantity <= 0) throw new ArgumentException("Quantity debe ser mayor que 0", nameof(quantity));
+            if (string.IsNullOrWhiteSpace(unitPrice)) throw new ArgumentNullException(nameof(unitPrice));
+            if (string.IsNullOrWhiteSpace(taxRate)) throw new ArgumentNullException(nameof(taxRate));
+            if (string.IsNullOrWhiteSpace(taxClassName)) throw new ArgumentNullException(nameof(taxClassName));
+            if (string.IsNullOrWhiteSpace(type)) throw new ArgumentNullException(nameof(type));
+
+            Name = name;
+            Description = description;
+            Quantity = quantity;
+            UnitPrice = unitPrice;
+            TaxRate = taxRate;
+            TaxClassName = taxClassName;
+            Type = type;
+        }
     }
 }

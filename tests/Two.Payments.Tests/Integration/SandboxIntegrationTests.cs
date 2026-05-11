@@ -130,8 +130,9 @@ namespace Two.Payments.Tests.Integration
                 LineItems = new System.Collections.Generic.List<LineItem>
                 {
                     new LineItem
-                    {
-                        Description = "Producto de Prueba",
+                    (
+                        Name = "Test Product",
+                        Description = "Producto de prueba",
                         Quantity = 1,
                         QuantityUnit = "pcs",
                         UnitPrice = "100.00",
@@ -143,7 +144,7 @@ namespace Two.Payments.Tests.Integration
                         DiscountAmount = "0.00",
                         Type = "PHYSICAL",
                         ProductId = "TEST-001"
-                    }
+                    )
                 },
                 MerchantOrderId = $"TEST-{DateTime.UtcNow:yyyyMMddHHmmss}"
             };

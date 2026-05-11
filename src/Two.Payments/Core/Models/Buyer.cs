@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 
 namespace Two.Payments.Core.Models
 {
@@ -12,5 +13,13 @@ namespace Two.Payments.Core.Models
         /// <summary>Company information for the buyer.</summary>
         [JsonProperty("company")]
         public BuyerCompany Company { get; set; }
+
+        
+
+        public Buyer(BuyerRepresentative representative, BuyerCompany company)
+        {
+            Representative = representative ?? throw new ArgumentNullException(nameof(representative));
+            Company = company ?? throw new ArgumentNullException(nameof(company));
+        }
     }
 }

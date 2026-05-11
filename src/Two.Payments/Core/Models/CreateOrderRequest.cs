@@ -75,6 +75,10 @@ namespace Two.Payments.Core.Models
         /// <summary>URL to redirect the buyer to after order confirmation.</summary>
         [JsonProperty("merchant_urls", NullValueHandling = NullValueHandling.Ignore)]
         public MerchantUrls MerchantUrls { get; set; }
+
+        // TODO: Validar que los campos requeridos por la API de Two estén presentes y con el formato correcto.
+        // Por ejemplo, asegúrate de que los campos numéricos se envíen como números y no como strings, y que los campos obligatorios no sean nulos.
+        // Puedes agregar validaciones en el constructor o en un método Validate().
     }
 
     /// <summary>Billing address for the order.</summary>

@@ -1,51 +1,44 @@
-using System;
-using System.Globalization;
 using Newtonsoft.Json;
+using System;
 
 namespace Two.Payments.Infrastructure.Serialization
 {
-    internal sealed class StringNumberJsonConverter : JsonConverter<string>
+    /// <summary>
+    /// Serializa/Deserializa números que en Two se esperan como string con punto decimal.
+    /// Acepta "1", "1.0", "1,00" al deserializar pero siempre serializa con punto y dos decimales.
+    /// </summary>
+    public class StringNumberJsonConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, string value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
+            => objectType == typeof(string);
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                writer.WriteNull();
-                return;
-            }
-
-            if (!decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var number))
-            {
-                throw new JsonSerializationException($"Value '{value}' is not a valid numeric string.");
-            }
-
-            writer.WriteValue(number);
+            if (reader.TokenType == JsonToken.Null) return null;
+            var s = (reader.Value ?? string.Empty).ToString();
+            if (string.IsNullOrWhiteSpace(s)) return null;
+            if (decimal.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var d))
+                return d.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            if (decimal.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out d))
+                return d.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            return s; // deja tal cual si no se puede convertir, para que lo valide la API
         }
 
-        public override string ReadJson(
-            JsonReader reader,
-            Type objectType,
-            string existingValue,
-            bool hasExistingValue,
-            JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null)
+            var s = value as string;
+            if (string.IsNullOrWhiteSpace(s)) { writer.WriteNull(); return; }
+            if (decimal.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var d))
             {
-                return null;
+                writer.WriteValue(d.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+                return;
             }
-
-            if (reader.TokenType == JsonToken.Integer || reader.TokenType == JsonToken.Float)
+            if (decimal.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out d))
             {
-                return Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
+                writer.WriteValue(d.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+                return;
             }
-
-            if (reader.TokenType == JsonToken.String)
-            {
-                return (string)reader.Value;
-            }
-
-            throw new JsonSerializationException(
-                $"Unexpected token {reader.TokenType} when parsing numeric string value.");
+            writer.WriteValue(s);
         }
     }
 }
