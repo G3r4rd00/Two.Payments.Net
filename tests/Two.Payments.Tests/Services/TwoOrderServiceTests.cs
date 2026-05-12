@@ -155,22 +155,21 @@ namespace Two.Payments.Tests.Services
                 GrossAmount = "120.00",
                 NetAmount = "100.00",
                 TaxAmount = "20.00",
-                Buyer = new Buyer
-                {
-                    Representative = new BuyerRepresentative
+                Buyer = new Buyer(
+                    new BuyerRepresentative
                     {
                         FirstName = "John",
                         LastName = "Doe",
                         Email = "john.doe@example.com",
                         PhoneNumber = "07700900000"
                     },
-                    Company = new BuyerCompany
+                    new BuyerCompany
                     {
                         CountryPrefix = "GB",
                         OrganizationNumber = "12345678",
                         CompanyName = "Acme Ltd"
                     }
-                },
+                ),
                 BillingAddress = new BillingAddress
                 {
                     Address = "221B Baker Street",
@@ -235,15 +234,21 @@ namespace Two.Payments.Tests.Services
                 GrossAmount = "120.00",
                 NetAmount = "100.00",
                 TaxAmount = "20.00",
-                Buyer = new Buyer
-                {
-                    Company = new BuyerCompany
+                Buyer = new Buyer(
+                    new BuyerRepresentative
+                    {
+                        FirstName = "John",
+                        LastName = "Doe",
+                        Email = "john.doe@example.com",
+                        PhoneNumber = "07700900000"
+                    },
+                    new BuyerCompany
                     {
                         CountryPrefix = "GB",
                         OrganizationNumber = "12345678",
                         CompanyName = "Acme Ltd"
                     }
-                },
+                ),
                 BillingAddress = new BillingAddress
                 {
                     Address = "Billing Street 1",
@@ -365,22 +370,22 @@ namespace Two.Payments.Tests.Services
                 DiscountAmount = "0.00",
                 DiscountRate = "0.00",
                 TaxRate = "0.25",
-                Buyer = new Buyer
-                {
-                    Representative = new BuyerRepresentative
+                Buyer = new Buyer(
+
+                    new BuyerRepresentative
                     {
                         FirstName = "John",
                         LastName = "Doe",
                         Email = "john.doe@example.com",
                         PhoneNumber = "07700900000"
                     },
-                    Company = new BuyerCompany
+                    new BuyerCompany
                     {
                         CountryPrefix = "GB",
                         OrganizationNumber = "12345678",
                         CompanyName = "Acme Ltd"
                     }
-                }
+                )
             };
 
             var result = await client.Orders.CreateOrderAsync(request);

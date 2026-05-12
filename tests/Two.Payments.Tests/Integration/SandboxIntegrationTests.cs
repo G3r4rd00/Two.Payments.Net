@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Two.Payments.Application;
 using Two.Payments.Core.Interfaces;
@@ -83,6 +85,34 @@ namespace Two.Payments.Tests.Integration
             Assert.Equal(404, exception.StatusCode);
         }
 
+        [Fact(Skip = "Requires valid sandbox API key and merchant data")]
+        public async Task CreateOrder_WithValidLineItemType_ShouldSucceed()
+        {
+            // Arrange
+            var client = CreateSandboxClient();
+            var request = BuildSpanishOrderRequest();
+
+            // Modify request to include a valid LineItem type
+            request.LineItems.Add(new LineItem(
+                name: "Shipping cost",
+                description: "Shipping cost",
+                quantity: 1,
+                unitPrice: "4.79",
+                taxRate: "0.21",
+                taxClassName: "HIGH",
+                type: "SHIPPING_FEE"
+            ));
+
+            // Act
+            var order = await client.Orders.CreateOrderAsync(request);
+
+            // Assert
+            Assert.NotNull(order);
+            Assert.NotNull(order.Id);
+            Assert.Equal("PENDING", order.Status);
+            Assert.Equal("EUR", order.Currency);
+        }
+
         private static CreateOrderRequest BuildSpanishOrderRequest()
         {
             return new CreateOrderRequest
@@ -95,22 +125,21 @@ namespace Two.Payments.Tests.Integration
                 DiscountAmount = "0.00",
                 DiscountRate = "0.00",
                 TaxRate = "0.21",
-                Buyer = new Buyer
-                {
-                    Representative = new BuyerRepresentative
+                Buyer = new Buyer(
+                    new BuyerRepresentative
                     {
                         FirstName = "Juan",
                         LastName = "Pérez",
                         Email = "juan.perez@example.com",
                         PhoneNumber = "+34612345678"
                     },
-                    Company = new BuyerCompany
+                    new BuyerCompany
                     {
                         CountryPrefix = "ES",
                         OrganizationNumber = "B12345678",
                         CompanyName = "Empresa Demo S.L."
                     }
-                },
+                ),
                 BillingAddress = new BillingAddress
                 {
                     OrganizationName = "Empresa Demo S.L.",
@@ -129,21 +158,14 @@ namespace Two.Payments.Tests.Integration
                 },
                 LineItems = new System.Collections.Generic.List<LineItem>
                 {
-                    new LineItem
-                    (
-                        Name = "Test Product",
-                        Description = "Producto de prueba",
-                        Quantity = 1,
-                        QuantityUnit = "pcs",
-                        UnitPrice = "100.00",
-                        NetAmount = "100.00",
-                        TaxAmount = "21.00",
-                        GrossAmount = "121.00",
-                        TaxRate = "0.21",
-                        TaxClassName = "HIGH",
-                        DiscountAmount = "0.00",
-                        Type = "PHYSICAL",
-                        ProductId = "TEST-001"
+                    new LineItem(
+                        name: "Test Product",
+                        description: "Producto de prueba",
+                        quantity: 1,
+                        unitPrice: "100.00",
+                        taxRate: "0.21",
+                        taxClassName: "HIGH",
+                        type: "PHYSICAL"
                     )
                 },
                 MerchantOrderId = $"TEST-{DateTime.UtcNow:yyyyMMddHHmmss}"
