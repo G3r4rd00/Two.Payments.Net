@@ -1,15 +1,15 @@
 using System;
 using System.Threading.Tasks;
+using System.IO;
+using Newtonsoft.Json;
 using Two.Payments.Application;
 using Two.Payments.Core.Models;
 using Two.Payments.Infrastructure.Configuration;
-using System.IO; // Para leer el archivo .env
 
 namespace SandboxTester
 {
     class Program
     {
-        // Lee la API Key desde el archivo .env
         private static string GetSandboxApiKey()
         {
             var envPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".env");
@@ -25,7 +25,7 @@ namespace SandboxTester
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("=== Two.Payments Sandbox Tester ===\n");
+            Console.WriteLine("=== Two.Payments Sandbox Repro ===\n");
 
             try
             {
@@ -35,70 +35,100 @@ namespace SandboxTester
                     UseSandbox = true
                 });
 
-                Console.WriteLine("✓ Cliente creado con sandbox API key");
-                Console.WriteLine("  Endpoint: https://api.sandbox.two.inc/v1\n");
-
-                var representative = new BuyerRepresentative
-                {
-                    FirstName = "Nombre",
-                    LastName = "Apellidos",
-                    PhoneNumber = "+34666555888",
-                    Email = "fff@gmail.com"
-                };
-                var company = new BuyerCompany
-                {
-                    CountryPrefix = "ES",
-                    OrganizationNumber = "43136113Y",
-                    CompanyName = "BLX"
-                };
-                var billingAddress = new BillingAddress
-                {
-                    OrganizationName = "BLX",
-                    StreetAddress = "Calle Facturación 789",
-                    PostalCode = "28081",
-                    City = "Madrid",
-                    Country = "ES"
-                };
-                // Crear la orden exactamente como en el JSON proporcionado
-                Console.WriteLine("Creando orden de prueba...");
-                var e = new CreateOrderRequest
+                // Construir la petición exactamente como en el log
+                var request = new CreateOrderRequest
                 {
                     Currency = "EUR",
                     InvoiceType = "DIRECT_INVOICE",
-                    GrossAmount = "11.93",
-                    NetAmount = "9.86",
-                    TaxAmount = "2.07",
+                    GrossAmount = "48.04",
+                    NetAmount = "39.70",
+                    TaxAmount = "8.34",
                     DiscountAmount = "0.00",
                     DiscountRate = "0.00",
                     TaxRate = "0.21",
-                    Buyer = new Buyer(representative, company),
-                    BillingAddress = billingAddress,
+                    Buyer = new Buyer(
+                        new BuyerRepresentative
+                        {
+                            FirstName = "Name",
+                            LastName = "Ape",
+                            PhoneNumber = "+34666555888",
+                            Email = "eeee@gmail.com"
+                        },
+                        new BuyerCompany
+                        {
+                            CountryPrefix = "ES",
+                            OrganizationNumber = "43136516F",
+                            CompanyName = "BLX"
+                        }
+                    ),
+                    BillingAddress = new BillingAddress
+                    {
+                        OrganizationName = "BLX",
+                        StreetAddress = "asdf",
+                        PostalCode = "07006",
+                        City = "asdf",
+                        Country = "ES"
+                    },
+                    ShippingAddress = new BillingAddress
+                    {
+                        OrganizationName = "BLX",
+                        StreetAddress = "asdf",
+                        PostalCode = "07006",
+                        City = "asdf",
+                        Country = "ES"
+                    },
                     LineItems = new System.Collections.Generic.List<LineItem>
                     {
                         new LineItem(
-                            name: "FACIAL MOISTURISING LOTION for normal to dry skin 52 ml",
-                            description: "FACIAL MOISTURISING LOTION for normal to dry skin 52 ml",
+                            name: "GEL LIMPIADOR espumoso 1000 ml",
+                            description: "GEL LIMPIADOR espumoso 1000 ml",
                             quantity: 1,
-                            unitPrice: "8.60",
+                            unitPrice: "13.26",
                             taxRate: "0.21",
-                            taxClassName: "GENERAL",
+                            taxClassName: "HIGH",
                             type: "PHYSICAL"
-                        ){
-                            ProductId = "124261"
+                        )
+                        {
+                            GrossAmount = "16.04",
+                            NetAmount = "13.26",
+                            TaxAmount = "2.78",
+                            DiscountAmount = "0.00",
+                            ProductId = "124249"
                         },
                         new LineItem(
-                            name: "DISCREET compresa incontinencia normal 12 u",
-                            description: "DISCREET compresa incontinencia normal 12 u",
-                            quantity: 1,
-                            unitPrice: "1.26",
+                            name: "DEO traitement anti-transpirant 48h roll-on 50 ml",
+                            description: "DEO traitement anti-transpirant 48h roll-on 50 ml",
+                            quantity: 4,
+                            unitPrice: "5.41",
                             taxRate: "0.21",
-                            taxClassName: "GENERAL",
+                            taxClassName: "HIGH",
                             type: "PHYSICAL"
-                        ){
-                         ProductId = "74993"
+                        )
+                        {
+                            GrossAmount = "26.20",
+                            NetAmount = "21.65",
+                            TaxAmount = "4.55",
+                            DiscountAmount = "0.00",
+                            ProductId = "73661"
+                        },
+                        new LineItem(
+                            name: "Shipping cost",
+                            description: "Shipping cost",
+                            quantity: 1,
+                            unitPrice: "4.79",
+                            taxRate: "0.21",
+                            taxClassName: "HIGH",
+                            type: "SHIPPING_FEE" 
+                        )
+                        {
+                            GrossAmount = "5.80",
+                            NetAmount = "4.79",
+                            TaxAmount = "1.01",
+                            DiscountAmount = "0.00",
+                            ProductId = "SHIPPING"
                         }
                     },
-                    MerchantOrderId = "X141127978",
+                    MerchantOrderId = "X141127979",
                     MerchantUrls = new MerchantUrls
                     {
                         MerchantConfirmationUrl = "http://localhost:63636/es/pago/twookcallback/",
@@ -106,24 +136,24 @@ namespace SandboxTester
                     }
                 };
 
-                var order = await client.Orders.CreateOrderAsync(e);
 
-                Console.WriteLine($"✓ Orden creada exitosamente!");
-                Console.WriteLine($"  ID: {order.Id}");
-                Console.WriteLine($"  Status: {order.Status}");
-                Console.WriteLine($"  Currency: {order.Currency}\n");
+                // Llamada al API
+                var order = await client.Orders.CreateOrderAsync(request);
 
-                Console.WriteLine("=== ¡Tu API key funciona correctamente! ===");
+                Console.WriteLine("\n✅ Orden creada:");
+                Console.WriteLine($"  Id: {order?.Id}");
+                Console.WriteLine($"  Status: {order?.Status}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"\n❌ Error: {ex.Message}");
-                Console.WriteLine($"   Type: {ex.GetType().Name}");
+                Console.WriteLine("\n❌ Excepción al crear orden:");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Type: {ex.GetType().Name}");
                 if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"   Detalle: {ex.InnerException.Message}");
-                }
-                Console.WriteLine($"\n   Stack trace:");
+                    Console.WriteLine($"Inner: {ex.InnerException.Message}");
+
+                // Si es TwoApiException es probable que contenga código y body
+                Console.WriteLine("\nStackTrace:");
                 Console.WriteLine(ex.StackTrace);
             }
 

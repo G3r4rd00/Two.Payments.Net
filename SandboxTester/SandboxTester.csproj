@@ -10,4 +10,10 @@
     <ProjectReference Include="..\src\Two.Payments\Two.Payments.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update=".env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
