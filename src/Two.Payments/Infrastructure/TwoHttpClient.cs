@@ -181,6 +181,9 @@ namespace Two.Payments.Infrastructure
 
             string errorCode = null;
             string errorMessage = $"Two API error: HTTP {(int)response.StatusCode}";
+            string errorDetails = null;
+            string errorCtxMessage = null;
+            string errorTraceId = null;
 
             if (!string.IsNullOrWhiteSpace(body))
             {
@@ -192,6 +195,43 @@ namespace Two.Payments.Infrastructure
                     if (!string.IsNullOrWhiteSpace(apiError?.ErrorCode))
                     {
                         errorCode = apiError.ErrorCode;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(apiError?.ErrorDetails))
+                    {
+                        errorDetails = apiError.ErrorDetails;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(apiError?.ErrorTraceId))
+                    {
+                        errorTraceId = apiError.ErrorTraceId;
+                    }
+
+                    if (apiError?.ErrorJson != null)
+                    {
+                        foreach (var entry in apiError.ErrorJson)
+                        {
+                            var ctx = entry?["ctx"] as JObject;
+                            if (ctx == null)
+                            {
+                                continue;
+                            }
+
+                            foreach (var property in ctx.Properties())
+                            {
+                                var value = property.Value?.ToString();
+                                if (!string.IsNullOrWhiteSpace(value))
+                                {
+                                    errorCtxMessage = value;
+                                    break;
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(errorCtxMessage))
+                            {
+                                break;
+                            }
+                        }
                     }
 
                     if (!string.IsNullOrWhiteSpace(apiError?.ErrorMessage))
@@ -211,6 +251,23 @@ namespace Two.Payments.Infrastructure
                                 : !string.IsNullOrWhiteSpace(title)
                                     ? title
                                     : errorMessage;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(errorCtxMessage)
+                        && errorMessage.IndexOf(errorCtxMessage, StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        errorMessage = $"{errorMessage}: {errorCtxMessage}";
+                    }
+                    else if (!string.IsNullOrWhiteSpace(errorDetails)
+                        && errorMessage.IndexOf(errorDetails, StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        errorMessage = $"{errorMessage}: {errorDetails}";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(errorTraceId)
+                        && errorMessage.IndexOf("trace_id", StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        errorMessage = $"{errorMessage} (trace_id: {errorTraceId})";
                     }
 
                     if (errorMessage.StartsWith("Two API error: HTTP", StringComparison.Ordinal))
