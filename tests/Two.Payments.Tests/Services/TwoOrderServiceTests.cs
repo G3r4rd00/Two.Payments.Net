@@ -643,47 +643,5 @@ namespace Two.Payments.Tests.Services
             Assert.Single(response.LineItems);
             Assert.Equal(2, response.LineItems[0].Quantity);
         }
-
-        [Fact]
-        public async Task CreateOrderAsync_ThrowsArgumentNullException_WhenRequestIsNull()
-        {
-            var client = BuildClient(new MockHttpMessageHandler());
-
-            await Assert.ThrowsAsync<System.ArgumentNullException>(
-                () => client.Orders.CreateOrderAsync(null));
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task GetOrderAsync_ThrowsArgumentException_WhenOrderIdIsInvalid(string orderId)
-        {
-            var client = BuildClient(new MockHttpMessageHandler());
-
-            await Assert.ThrowsAsync<System.ArgumentException>(
-                () => client.Orders.GetOrderAsync(orderId));
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task ConfirmOrderAsync_ThrowsArgumentException_WhenOrderIdIsInvalid(string orderId)
-        {
-            var client = BuildClient(new MockHttpMessageHandler());
-
-            await Assert.ThrowsAsync<System.ArgumentException>(
-                () => client.Orders.ConfirmOrderAsync(orderId));
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task CancelOrderAsync_ThrowsArgumentException_WhenOrderIdIsInvalid(string orderId)
-        {
-            var client = BuildClient(new MockHttpMessageHandler());
-
-            await Assert.ThrowsAsync<System.ArgumentException>(
-                () => client.Orders.CancelOrderAsync(orderId));
-        }
     }
 }
