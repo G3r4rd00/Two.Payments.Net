@@ -140,9 +140,9 @@ namespace SandboxTester
         {
             return CreateBaseRequest(
                 merchantOrderId: "X-MIX-001",
-                grossAmount: "48.04",
-                netAmount: "39.70",
-                taxAmount: "8.34",
+                grossAmount: "44.35",
+                netAmount: "39.69",
+                taxAmount: "4.66",
                 taxRate: "0.21",
                 lineItems: new List<LineItem>
                 {
@@ -172,9 +172,9 @@ namespace SandboxTester
                         type: "PHYSICAL"
                     )
                     {
-                        GrossAmount = "22.56",
-                        NetAmount = "21.16",
-                        TaxAmount = "1.40",
+                        GrossAmount = "22.51",
+                        NetAmount = "21.64",
+                        TaxAmount = "0.87",
                         DiscountAmount = "0.00",
                         ProductId = "73661"
                     },
@@ -249,7 +249,7 @@ namespace SandboxTester
                 grossAmount: "30.00",
                 netAmount: "30.00",
                 taxAmount: "0.00",
-                taxRate: "0.00",
+                taxRate: "0",
                 lineItems: new List<LineItem>
                 {
                     new LineItem(
@@ -266,7 +266,8 @@ namespace SandboxTester
                         NetAmount = "15.00",
                         TaxAmount = "0.00",
                         DiscountAmount = "0.00",
-                        ProductId = "NO-TAX-A"
+                        ProductId = "NO-TAX-A",
+                        TaxCode = "ES_IVA_ZERO"
                     },
                     new LineItem(
                         name: "Tax-free product B",
@@ -282,7 +283,8 @@ namespace SandboxTester
                         NetAmount = "15.00",
                         TaxAmount = "0.00",
                         DiscountAmount = "0.00",
-                        ProductId = "NO-TAX-B"
+                        ProductId = "NO-TAX-B",
+                        TaxCode = "ES_IVA_ZERO"
                     }
                 });
         }
