@@ -72,6 +72,11 @@ namespace Two.Payments.Core.Models
         [JsonProperty("type")]
         public string Type { get; set; }
 
+
+        /// <summary>Tax code for the line item (e.g. "E" for exempt, "S" for standard rate). Required when tax_rate is 0 for ES orders.</summary>
+        [JsonProperty("tax_code")]
+        public string TaxCode { get; set; }
+
         /// <summary>Merchant's own identifier for the product.</summary>
         [JsonProperty("product_id")]
         public string ProductId { get; set; }
