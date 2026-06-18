@@ -23,6 +23,17 @@ namespace Two.Payments.Application
     /// </example>
     public static class TwoClientFactory
     {
+        public static ITwoClient Create(string apiKey, bool useSandbox = true)
+        {
+            if (string.IsNullOrWhiteSpace(apiKey)) throw new ArgumentException("API key must be provided.", nameof(apiKey));
+            var options = new TwoOptions
+            {
+                ApiKey = apiKey,
+                UseSandbox = useSandbox
+            };
+            return Create(options);
+        }
+
         /// <summary>
         /// Creates a fully configured <see cref="ITwoClient"/> using default settings.
         /// </summary>
